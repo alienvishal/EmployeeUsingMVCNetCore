@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EmployeeMgmt.Controllers
 {
@@ -32,12 +33,14 @@ namespace EmployeeMgmt.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Create(CreateEmployeeViewModel model)
         {
             if (ModelState.IsValid)
@@ -75,9 +78,15 @@ namespace EmployeeMgmt.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ViewResult Edit(int id)
         {
             Employee emp = _employeeRepository.GetEmployee(id);
+            if (emp == null)
+            {
+                return View("~/Error/NotFound");
+            }
+
             EmployeeEditViewModel employeeEditViewModel = new EmployeeEditViewModel
             {
                 Id = emp.Id,
@@ -90,6 +99,7 @@ namespace EmployeeMgmt.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
             if(ModelState.IsValid)
@@ -113,6 +123,7 @@ namespace EmployeeMgmt.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Delete(int id)
         {
             Employee delEmp = _employeeRepository.GetEmployee(id);

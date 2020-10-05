@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<IdentityUser> signInManager;
+ 
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -7,9 +9,8 @@
         <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.js"></script>
-        <script src="~/lib/jquery/jquery.unobtrusive-ajax.js"></script>
     </environment>
-    
+
     <environment exclude="Development">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -19,12 +20,12 @@
               asp-fallback-test-property="position"
               asp-fallback-test-value="absolute">
 
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-                integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+                integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
                 crossorigin="anonymous"
-                asp-fallback-src="~/lib/jquery/jquery.slim.min.js"
-                asp-fallback-test="window.jQuery">
-        </script>
+                asp-fallback-src="~/lib/jquery/jquery.js"
+                asp-fallback-test="window.jQuery"></script>
 
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
                 integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
@@ -32,9 +33,10 @@
                 asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js"
                 asp-fallback-test="window.jQuery">
         </script>
-        <script src="~/lib/jquery/jquery.unobtrusive-ajax.js"></script>
     </environment>
-    
+
+    <script src="~/lib/jquery/jquery.validate.js"></script>
+    <script src="~/lib/jquery-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <link href="~/css/Site.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
 </head>
@@ -56,6 +58,27 @@
                     <li class="nav-item">
                         <a asp-controller="home" asp-action="create" class="nav-link">Create</a>
                     </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <form method="post" asp-action="logout" asp-controller="account">
+                                <button type="submit" class="nav-link btn btn-link py-0">
+                                    Logout @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a asp-controller="account" asp-action="login" class="nav-link">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="account" asp-action="register" class="nav-link">Register</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </nav>
